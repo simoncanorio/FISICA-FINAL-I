@@ -7,7 +7,7 @@ from fase1_vicsek import VicsekSimulation
 N = 150        # Número de partículas
 L = 20.0       # Tamaño de la caja
 R = 2.0        # Radio de interacción
-eta = 0.4      # Nivel de ruido (0 = alineación perfecta, >2 = caos)
+eta = 0.4     # Nivel de ruido (0 = alineación perfecta, >2 = caos)
 v = 0.5        # Velocidad constante
 
 # Inicializamos el motor de la simulación que creamos antes
