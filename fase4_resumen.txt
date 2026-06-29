@@ -1,0 +1,76 @@
+======================================================================
+  FASE 4 — RESUMEN DE RESULTADOS NUMÉRICOS
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+  MODELO: Vicsek Local  (R = 2.0)
+──────────────────────────────────────────────────────────────────────
+  Número de puntos eta     : 20
+  Rango de eta             : [0.050, 2.000]
+  <Phi> máximo (bajo ruido): 0.99988
+  <Phi> mínimo (alto ruido): 0.69410
+
+  Punto crítico (susceptibilidad máxima):
+    η_c = 1.7947
+    η_c = 2.0000  (verificación por inflexión)
+
+  Correlación espacial (evaluada en η = 1.7947):
+    Ajuste exponencial  : ξ = 21.0415  |  R² = 0.9382
+    Ajuste ley potencias: α = 0.1452  |  R² = 0.7239
+    ➜ Decaimiento EXPONENCIAL (sistema subcrítico)
+
+──────────────────────────────────────────────────────────────────────
+  MODELO: Continuo Local
+──────────────────────────────────────────────────────────────────────
+  Número de puntos eta     : 20
+  Rango de eta             : [0.050, 2.000]
+  <Phi> máximo (bajo ruido): 0.28489
+  <Phi> mínimo (alto ruido): 0.11360
+
+  Punto crítico (susceptibilidad máxima):
+    η_c = 0.4605
+    η_c = 0.5632  (verificación por inflexión)
+
+  Correlación espacial (evaluada en η = 0.4605):
+    Ajuste exponencial  : ξ = 29.4000  |  R² = -0.0316
+    Ajuste ley potencias: α = 0.0100  |  R² = -0.0053
+
+──────────────────────────────────────────────────────────────────────
+  MODELO: Vicsek All-to-All (campo medio)
+──────────────────────────────────────────────────────────────────────
+  Número de puntos eta     : 20
+  Rango de eta             : [0.050, 2.000]
+  <Phi> máximo (bajo ruido): 0.99990
+  <Phi> mínimo (alto ruido): 0.84265
+
+  Punto crítico (susceptibilidad máxima):
+    η_c = 2.0000
+    η_c = 2.0000  (verificación por inflexión)
+
+  Correlación espacial (evaluada en η = 2.0000):
+    Ajuste exponencial  : ξ = 29.4000  |  R² = -10.0478
+    Ajuste ley potencias: α = 0.0100  |  R² = -0.2911
+
+──────────────────────────────────────────────────────────────────────
+  MODELO: Continuo Sin Radio (campo medio)
+──────────────────────────────────────────────────────────────────────
+  Número de puntos eta     : 20
+  Rango de eta             : [0.050, 2.000]
+  <Phi> máximo (bajo ruido): 1.00000
+  <Phi> mínimo (alto ruido): 0.99480
+
+  Punto crítico (susceptibilidad máxima):
+    η_c = 1.8974
+    η_c = 1.6921  (verificación por inflexión)
+
+  Correlación espacial (evaluada en η = 1.8974):
+    Ajuste exponencial  : ξ = 29.4000  |  R² = -14813.0341
+    Ajuste ley potencias: α = 0.0100  |  R² = -99.6968
+
+======================================================================
+  Archivos generados:
+    → fase4_transicion_fase.png
+    → fase4_susceptibilidad.png
+    → fase4_correlacion_espacial.png
+    → fase4_comparativa.png
+======================================================================
