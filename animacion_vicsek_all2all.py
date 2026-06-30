@@ -8,12 +8,11 @@ from fase1_vicsek_all2all import VicsekSimulationAll2All
 # Configuración de los parámetros para una simulación vistosa
 N = 150        # Número de partículas
 L = 20.0       # Tamaño de la caja
-R = 2.0        # Radio de interacción
 eta = 0.4      # Nivel de ruido (0 = alineación perfecta, >2 = caos)
 v = 0.5        # Velocidad constante
 
 # Inicializamos el motor de la simulación All-to-All que creamos
-sim = VicsekSimulationAll2All(num_particles=N, box_size=L, interaction_radius=R, noise_amplitude=eta, speed=v)
+sim = VicsekSimulationAll2All(num_particles=N, box_size=L, noise_amplitude=eta, speed=v)
 
 # Configuración de la ventana gráfica
 fig, ax = plt.subplots(figsize=(7, 7))

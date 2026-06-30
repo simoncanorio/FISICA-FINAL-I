@@ -145,7 +145,6 @@ def barrer_vicsek_all2all(
             sim = VicsekSimulationAll2All(
                 num_particles=N,
                 box_size=L,
-                interaction_radius=R,
                 noise_amplitude=float(eta),
                 speed=v,
             )

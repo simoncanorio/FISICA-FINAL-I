@@ -2,21 +2,19 @@ import numpy as np
 import time
 
 class VicsekSimulationAll2All:
-    def __init__(self, num_particles, box_size, interaction_radius, noise_amplitude, speed, delta_t=1):
+    def __init__(self, num_particles, box_size, noise_amplitude, speed, delta_t=1):
         """
         Inicializa la simulación del Modelo Discreto de Vicsek usando matriz de distancias (Todos contra Todos).
         
         Args:
             num_particles (int): N, número de partículas.
             box_size (float): L, tamaño del lado del espacio cuadrado (topología de toroide).
-            interaction_radius (float): R, radio de vecindad para la alineación.
             noise_amplitude (float): eta, amplitud máxima del ruido angular en radianes ([-eta/2, eta/2]).
             speed (float): v, velocidad escalar constante de las partículas.
             delta_t (float): Paso de tiempo para la actualización cinemática.
         """
         self.N = num_particles
         self.L = box_size
-        self.R = interaction_radius
         self.eta = noise_amplitude
         self.v = speed
         self.dt = delta_t
@@ -68,7 +66,6 @@ if __name__ == "__main__":
     sim = VicsekSimulationAll2All(
         num_particles=N_test, 
         box_size=L_test, 
-        interaction_radius=2.0, 
         noise_amplitude=0.5, 
         speed=1.0
     )
