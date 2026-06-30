@@ -1,51 +1,16 @@
-"""
-Fase 3: Recolección de Datos — Barrido de Parámetros
-=====================================================
-Realiza un barrido automático sobre el nivel de ruido (eta) para ambos
-modelos (Vicsek discreto y Materia Activa Continua), calculando en cada
-paso el Parámetro de Orden Polar (Phi) y exportando los resultados a CSV.
-
-Archivos generados:
-    - resultados_vicsek.csv     : promedio de Phi vs eta (Modelo de Vicsek)
-    - resultados_continuo.csv   : promedio de Phi vs eta (Modelo Continuo)
-    - snapshots_vicsek.csv      : posiciones/ángulos al estabilizarse
-    - snapshots_continuo.csv    : posiciones/velocidades/ángulos al estabilizarse
-"""
-
 import numpy as np
 import csv
 import time
 import sys
 from pathlib import Path
-
-# Importamos los motores de simulación de las fases anteriores
 from fase1_vicsek import VicsekSimulation
 from fase2_continuo import ContinuousSimulation
-
 
 # ===========================================================================
 # FUNCIÓN DE CÁLCULO DEL PARÁMETRO DE ORDEN POLAR (Phi)
 # ===========================================================================
 
 def calcular_phi_vicsek(angles: np.ndarray) -> float:
-    """
-    Calcula el Parámetro de Orden Polar para el modelo de Vicsek (Fase 1).
-
-    En el modelo discreto, todas las partículas tienen la misma rapidez v,
-    por lo que el orden se mide directamente sobre los ángulos de orientación.
-
-    Phi = (1/N) * |sum_i (cos(theta_i), sin(theta_i))|
-
-    Valores:
-        Phi ~ 1.0  →  alineación perfecta (enjambre ordenado)
-        Phi ~ 0.0  →  movimiento aleatorio (caos total)
-
-    Args:
-        angles: Array de ángulos de orientación (rad) de las N partículas.
-
-    Returns:
-        Valor de Phi en el rango [0, 1].
-    """
     N = len(angles)
     vx_sum = np.sum(np.cos(angles))
     vy_sum = np.sum(np.sin(angles))
@@ -53,21 +18,6 @@ def calcular_phi_vicsek(angles: np.ndarray) -> float:
 
 
 def calcular_phi_continuo(velocities: np.ndarray) -> float:
-    """
-    Calcula el Parámetro de Orden Polar para el modelo continuo (Fase 2).
-
-    En el modelo continuo, la rapidez de cada partícula varía en el tiempo,
-    por lo que normalizamos cada vector de velocidad antes de promediar.
-    Esto evita que partículas rápidas (post-colisión) dominen el cálculo.
-
-    Phi = (1/N) * |sum_i (v_i / |v_i|)|
-
-    Args:
-        velocities: Array (N, 2) de vectores de velocidad (vx, vy).
-
-    Returns:
-        Valor de Phi en el rango [0, 1].
-    """
     N = len(velocities)
     speeds = np.linalg.norm(velocities, axis=1, keepdims=True)
     # Evitamos división por cero para partículas en reposo momentáneo
@@ -92,26 +42,7 @@ def barrer_vicsek(
     archivo_resumen: str = "resultados_vicsek.csv",
     archivo_snapshots: str = "snapshots_vicsek.csv",
 ):
-    """
-    Barrido automático del parámetro de ruido eta para el Modelo de Vicsek.
-
-    Para cada valor de eta, el sistema:
-      1. Se inicializa aleatoriamente.
-      2. Corre 'pasos_termal' pasos para alcanzar el estado estacionario.
-      3. Mide Phi durante 'pasos_medicion' pasos y guarda el promedio.
-      4. Exporta un snapshot del estado final.
-
-    Args:
-        eta_values      : Array de valores de ruido a explorar (de mayor a menor).
-        N               : Número de partículas.
-        L               : Tamaño de la caja.
-        R               : Radio de interacción.
-        v               : Velocidad escalar constante.
-        pasos_termal    : Pasos de termalización (descartados del promedio).
-        pasos_medicion  : Pasos de medición (promediados para obtener <Phi>).
-        archivo_resumen : Nombre del CSV con eta vs <Phi>.
-        archivo_snapshots: Nombre del CSV con el estado final de cada corrida.
-    """
+    
     print(f"\n{'='*60}")
     print(f"  BARRIDO VICSEK | N={N} | L={L} | R={R} | v={v}")
     print(f"  Pasos de termalización : {pasos_termal}")
@@ -210,21 +141,6 @@ def barrer_continuo(
     archivo_resumen: str = "resultados_continuo.csv",
     archivo_snapshots: str = "snapshots_continuo.csv",
 ):
-    """
-    Barrido automático del parámetro de ruido eta para el Modelo Continuo.
-
-    Funciona igual que 'barrer_vicsek' pero usa ContinuousSimulation
-    y registra también las velocidades instantáneas en el snapshot.
-
-    Args:
-        eta_values      : Array de valores de ruido a explorar (de mayor a menor).
-        (resto)         : Parámetros físicos del modelo continuo (ver fase2_continuo.py).
-        pasos_termal    : Pasos de termalización. Se recomienda un valor mayor que
-                          Vicsek porque el dt del modelo continuo es mucho menor.
-        pasos_medicion  : Pasos de medición promediados.
-        archivo_resumen : Nombre del CSV con eta vs <Phi>.
-        archivo_snapshots: Nombre del CSV con el estado final de cada corrida.
-    """
     print(f"\n{'='*60}")
     print(f"  BARRIDO CONTINUO | N={N} | L={L} | dt={dt}")
     print(f"  Pasos de termalización : {pasos_termal}")
@@ -319,10 +235,10 @@ if __name__ == "__main__":
 
     eta_values = np.linspace(ETA_MAX, ETA_MIN, N_PUNTOS)
 
-    print("\n╔══════════════════════════════════════════════════════════╗")
-    print("║        FASE 3 — RECOLECCIÓN MASIVA DE DATOS             ║")
-    print("║  Barrido de eta: de {:.2f} a {:.2f} ({} puntos)    ║".format(ETA_MAX, ETA_MIN, N_PUNTOS))
-    print("╚══════════════════════════════════════════════════════════╝")
+    print("\n")
+    print("FASE 3 — RECOLECCIÓN MASIVA DE DATOS")
+    print("Barrido de eta: de {:.2f} a {:.2f} ({} puntos)".format(ETA_MAX, ETA_MIN, N_PUNTOS))
+    print("")
 
     t0_global = time.time()
 

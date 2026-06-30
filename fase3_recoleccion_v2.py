@@ -1,20 +1,3 @@
-"""
-Fase 3 (v2): Recolección de Datos — Barrido de Parámetros
-==========================================================
-Realiza un barrido automático sobre el nivel de ruido (eta) para los modelos
-de acoplamiento global (campo medio):
-  - Vicsek All-to-All    : todos interactúan con todos sin radio de corte.
-  - Continuo Sin Radio   : modelo continuo con torque de alineación global.
-
-Calcula el Parámetro de Orden Polar (Phi) y exporta resultados a CSV.
-
-Archivos generados:
-    - resultados_vicsek_all2all.csv       : promedio de Phi vs eta
-    - resultados_continuo_sin_radio.csv   : promedio de Phi vs eta
-    - snapshots_vicsek_all2all.csv        : posiciones/ángulos al estabilizarse
-    - snapshots_continuo_sin_radio.csv    : posiciones/velocidades/ángulos al estabilizarse
-"""
-
 import numpy as np
 import csv
 import time
@@ -30,24 +13,6 @@ from continuo_sin_radio import ContinuousSimulationSinRadio
 # ===========================================================================
 
 def calcular_phi_vicsek(angles: np.ndarray) -> float:
-    """
-    Calcula el Parámetro de Orden Polar para el modelo de Vicsek All-to-All.
-
-    En este modelo todas las partículas tienen la misma rapidez v,
-    por lo que el orden se mide directamente sobre los ángulos de orientación.
-
-    Phi = (1/N) * |sum_i (cos(theta_i), sin(theta_i))|
-
-    Valores:
-        Phi ~ 1.0  →  alineación perfecta (enjambre ordenado)
-        Phi ~ 0.0  →  movimiento aleatorio (caos total)
-
-    Args:
-        angles: Array de ángulos de orientación (rad) de las N partículas.
-
-    Returns:
-        Valor de Phi en el rango [0, 1].
-    """
     N = len(angles)
     vx_sum = np.sum(np.cos(angles))
     vy_sum = np.sum(np.sin(angles))
@@ -55,21 +20,6 @@ def calcular_phi_vicsek(angles: np.ndarray) -> float:
 
 
 def calcular_phi_continuo(velocities: np.ndarray) -> float:
-    """
-    Calcula el Parámetro de Orden Polar para el modelo continuo sin radio.
-
-    La rapidez de cada partícula varía en el tiempo, por lo que normalizamos
-    cada vector de velocidad antes de promediar. Esto evita que partículas
-    rápidas dominen el cálculo.
-
-    Phi = (1/N) * |sum_i (v_i / |v_i|)|
-
-    Args:
-        velocities: Array (N, 2) de vectores de velocidad (vx, vy).
-
-    Returns:
-        Valor de Phi en el rango [0, 1].
-    """
     N = len(velocities)
     speeds = np.linalg.norm(velocities, axis=1, keepdims=True)
     # Evitamos división por cero para partículas en reposo momentáneo
@@ -94,31 +44,6 @@ def barrer_vicsek_all2all(
     archivo_resumen: str = "resultados_vicsek_all2all.csv",
     archivo_snapshots: str = "snapshots_vicsek_all2all.csv",
 ):
-    """
-    Barrido automático del parámetro de ruido eta para el Modelo de Vicsek All-to-All.
-
-    En este modelo NO hay radio de interacción: cada partícula se alinea con
-    el promedio global de TODAS las demás (campo medio / acoplamiento global).
-    El parámetro R se conserva en la interfaz para compatibilidad pero no
-    afecta la dinámica interna del modelo.
-
-    Para cada valor de eta el sistema:
-      1. Se inicializa aleatoriamente.
-      2. Corre 'pasos_termal' pasos para alcanzar el estado estacionario.
-      3. Mide Phi durante 'pasos_medicion' pasos y guarda el promedio.
-      4. Exporta un snapshot del estado final.
-
-    Args:
-        eta_values      : Array de valores de ruido a explorar (de mayor a menor).
-        N               : Número de partículas.
-        L               : Tamaño de la caja.
-        R               : Radio de interacción (solo informativo, no usado en dinámica).
-        v               : Velocidad escalar constante.
-        pasos_termal    : Pasos de termalización (descartados del promedio).
-        pasos_medicion  : Pasos de medición (promediados para obtener <Phi>).
-        archivo_resumen : Nombre del CSV con eta vs <Phi>.
-        archivo_snapshots: Nombre del CSV con el estado final de cada corrida.
-    """
     print(f"\n{'='*60}")
     print(f"  BARRIDO VICSEK ALL-TO-ALL | N={N} | L={L} | v={v}")
     print(f"  Modo            : Campo Medio Global (sin radio de corte)")
@@ -212,25 +137,6 @@ def barrer_continuo_sin_radio(
     archivo_resumen: str = "resultados_continuo_sin_radio.csv",
     archivo_snapshots: str = "snapshots_continuo_sin_radio.csv",
 ):
-    """
-    Barrido automático del parámetro de ruido eta para el Modelo Continuo Sin Radio.
-
-    En este modelo el torque de alineación actúa sobre el promedio global de
-    TODOS los ángulos del sistema (acoplamiento de campo medio continuo).
-    No existe radio de vecindario local: todas las partículas se alinean entre sí.
-
-    Funciona igual que 'barrer_vicsek_all2all' pero usa ContinuousSimulationSinRadio
-    y registra también las velocidades y velocidad angular en el snapshot.
-
-    Args:
-        eta_values      : Array de valores de ruido a explorar (de mayor a menor).
-        (resto)         : Parámetros físicos del modelo continuo (ver continuo_sin_radio.py).
-        pasos_termal    : Pasos de termalización. Se recomienda mayor que Vicsek porque
-                          el dt del modelo continuo es más pequeño.
-        pasos_medicion  : Pasos de medición promediados.
-        archivo_resumen : Nombre del CSV con eta vs <Phi>.
-        archivo_snapshots: Nombre del CSV con el estado final de cada corrida.
-    """
     print(f"\n{'='*60}")
     print(f"  BARRIDO CONTINUO SIN RADIO | N={N} | L={L} | dt={dt}")
     print(f"  Modo            : Acoplamiento Global (sin radio de vecindario)")
@@ -330,11 +236,11 @@ if __name__ == "__main__":
 
     eta_values = np.linspace(ETA_MAX, ETA_MIN, N_PUNTOS)
 
-    print("\n╔══════════════════════════════════════════════════════════╗")
-    print("║    FASE 3 (v2) — RECOLECCIÓN MASIVA DE DATOS            ║")
-    print("║    Modelos de Acoplamiento Global (Campo Medio)          ║")
-    print("║  Barrido de eta: de {:.2f} a {:.2f} ({} puntos)    ║".format(ETA_MAX, ETA_MIN, N_PUNTOS))
-    print("╚══════════════════════════════════════════════════════════╝")
+    print("\n   ")
+    print("FASE 3 (v2) — RECOLECCIÓN MASIVA DE DATOS")
+    print("Modelos de Acoplamiento Global (Campo Medio)")
+    print("Barrido de eta: de {:.2f} a {:.2f} ({} puntos)".format(ETA_MAX, ETA_MIN, N_PUNTOS))
+    print("----------------------------------------------------------")
 
     t0_global = time.time()
 

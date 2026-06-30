@@ -2,36 +2,6 @@
 import sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
-
-"""
-Fase 4: Analisis Visual y Matematico
-======================================
-Analiza los datos generados por fase3_recoleccion.py  (modelos con radio local)
-y por fase3_recoleccion_v2.py (modelos de campo medio / acoplamiento global).
-
-Análisis realizados:
-  1. Curvas de Transición de Fase  — Φ vs η para los 4 modelos.
-  2. Susceptibilidad σ(Φ) vs η    — localización del punto crítico η_c.
-  3. Correlación Espacial C(r)     — cómo se propaga el orden con la distancia.
-  4. Ajuste del Decaimiento        — exponencial vs ley de potencias.
-
-Archivos que necesita (generados por las Fases 3 y 3v2):
-  - resultados_vicsek.csv
-  - resultados_continuo.csv
-  - resultados_vicsek_all2all.csv
-  - resultados_continuo_sin_radio.csv
-  - snapshots_vicsek.csv
-  - snapshots_continuo.csv
-  - snapshots_vicsek_all2all.csv
-  - snapshots_continuo_sin_radio.csv
-
-Archivos generados:
-  - fase4_transicion_fase.png        : curvas Φ vs η  (4 modelos)
-  - fase4_susceptibilidad.png        : σ(Φ) vs η      (4 modelos)
-  - fase4_correlacion_espacial.png   : C(r) con ajustes en el punto crítico
-  - fase4_resumen.txt                : tabla de resultados numéricos
-"""
-
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -156,18 +126,6 @@ def calcular_correlacion_espacial(
     L: float,
     n_bins: int = 25,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Calcula la función de correlación espacial de velocidades:
-
-        C(r) = < v̂_i · v̂_j >_{|r_ij| ≈ r}
-
-    Usa condiciones de contorno periódicas (imagen mínima).
-
-    Returns:
-        r_centros  : centros de cada bin de distancia.
-        C_r        : valor promedio de C(r) en cada bin.
-        C_r_err    : error estándar de la media en cada bin.
-    """
     N = len(posiciones)
     r_max = L / 2.0          # máxima distancia distinguible con PBC
 
@@ -207,7 +165,7 @@ def calcular_correlacion_espacial(
 
 
 def obtener_snapshot_eta(snap_df: pd.DataFrame, eta_objetivo: float) -> pd.DataFrame:
-    """Devuelve las filas del snapshot cuyo eta es el más cercano a eta_objetivo."""
+    "Devuelve las filas del snapshot cuyo eta es el más cercano a eta_objetivo."
     etas_disponibles = snap_df["eta"].unique()
     eta_mas_cercano  = etas_disponibles[np.argmin(np.abs(etas_disponibles - eta_objetivo))]
     return snap_df[snap_df["eta"] == eta_mas_cercano].copy()
@@ -218,23 +176,15 @@ def obtener_snapshot_eta(snap_df: pd.DataFrame, eta_objetivo: float) -> pd.DataF
 # ─────────────────────────────────────────────────────────────────────────────
 
 def modelo_exponencial(r, A, xi):
-    """C(r) = A · exp(-r / ξ)   [decaimiento rápido, longitud de correlación ξ]"""
     return A * np.exp(-r / xi)
 
 
 def modelo_ley_potencias(r, A, alpha):
-    """C(r) = A · r^(-α)         [decaimiento lento, sistemas críticos]"""
     return A * np.power(r, -alpha)
 
 
 def ajustar_correlacion(r: np.ndarray, C: np.ndarray) -> dict:
-    """
-    Ajusta C(r) con dos modelos:
-      - Exponencial:   C(r) = A·exp(-r/ξ)
-      - Ley potencias: C(r) = A·r^{-α}
-
-    Retorna un dict con los parámetros y el R² de cada ajuste.
-    """
+    """Ajusta C(r) con dos modelos: C(r) = A·exp(-r/ξ) y C(r) = A·r^{-α}. Retorna un dict con los parámetros y el R² de cada ajuste."""
     resultado = {}
 
     # Filtramos bins sin datos o con r ≈ 0
@@ -287,11 +237,6 @@ def ajustar_correlacion(r: np.ndarray, C: np.ndarray) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def graficar_transicion_fase(datasets: dict, eta_criticos: dict) -> None:
-    """
-    Grafica Φ vs η para todos los modelos disponibles en un panel de 2x2.
-    Los paneles superiores corresponden a los modelos con radio local (Fase 3 original)
-    y los inferiores a los modelos de campo medio (Fase 3 v2).
-    """
     print("\n  → Generando Figura 1: Curvas de Transición de Fase...")
 
     fig = plt.figure(figsize=(14, 10))
@@ -368,10 +313,6 @@ def graficar_transicion_fase(datasets: dict, eta_criticos: dict) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def graficar_susceptibilidad(datasets: dict, eta_criticos: dict) -> None:
-    """
-    Grafica la desviación estándar de Φ (proxy de susceptibilidad) vs η.
-    El pico identifica el punto crítico η_c.
-    """
     print("  → Generando Figura 2: Susceptibilidad σ(Φ) vs η...")
 
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -433,11 +374,6 @@ def graficar_correlacion(
     eta_criticos: dict,
     L: float = 20.0,
 ) -> dict:
-    """
-    Calcula y grafica C(r) en el punto crítico para cada modelo disponible.
-    Ajusta decaimiento exponencial y ley de potencias.
-    Retorna dict con los parámetros de ajuste para el resumen numérico.
-    """
     print("  → Generando Figura 3: Correlación Espacial C(r)...")
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -554,10 +490,6 @@ def _mejor_ajuste(ajustes: dict) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def graficar_comparativa(datasets: dict, eta_criticos: dict) -> None:
-    """
-    Un único panel que superpone las 4 curvas Φ vs η para comparar
-    directamente los modelos locales y de campo medio.
-    """
     print("  → Generando Figura 4: Comparativa entre los 4 modelos...")
 
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -613,7 +545,6 @@ def graficar_comparativa(datasets: dict, eta_criticos: dict) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def escribir_resumen(datasets: dict, eta_criticos: dict, ajustes_todos: dict) -> None:
-    """Escribe un archivo de texto con todos los resultados numéricos clave."""
     print("  → Generando resumen numérico...")
 
     lineas = []
