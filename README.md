@@ -4,7 +4,7 @@ Repositorio del **Trabajo Final de Física I**.
 
 Este proyecto trata sobre la dinámica de sistemas de materia activa, centrándose en el fenómeno de autoorganización colectiva (*flocking*). A través de simulaciones y análisis, exploramos cómo reglas locales simples dan lugar a comportamientos emergentes complejos y cómo estos sistemas transitan del desorden al orden bajo la influencia del ruido.
 
-En en repositorio se encuentran subidas las simulaciones y los graficos obtenidos en el final del analisis, como también sus respectivos códigos, tanto para el modelo como para la simulación y los graficos finales, y el código que se realizó para la recolección de los datos. 
+## En en repositorio se encuentran subidas las simulaciones y los graficos obtenidos en el final del analisis, como también sus respectivos códigos y el código que se realizó para la recolección de los datos. Luego tambien se encuentran subidos dos PDF, uno que contiene el INFORME FINAL y otro que contiene un link para visualizar el VIDEO EXPLICATIVO DE LOS REUSLTADOS, al pesar demasiado tuvimos que entregarlo por este medio. Para poder ver todo, descargar la carpeta del repositorio en la computadora y acceder a los PDF desde ahí. 
 
 ## Enfoques de Modelado
 El trabajo compara cuatro enfoques distintos para simular el comportamiento de enjambre:
