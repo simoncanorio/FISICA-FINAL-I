@@ -9,26 +9,6 @@ class ContinuousSimulation:
                  d_att=3.0, k_att=2.0, 
                  d_align=2.0, k_align=5.0, 
                  noise_amplitude=0.5, delta_t=0.02):
-        """
-        Inicializa la simulación del Modelo Continuo de Materia Activa (Fase 2).
-        
-        Args:
-            num_particles (int): N, número de partículas.
-            box_size (float): L, tamaño del lado del espacio cuadrado (límites periódicos).
-            mass (float): m, masa de la partícula (resistencia a cambiar velocidad lineal).
-            inertia (float): I, momento de inercia (resistencia a cambiar dirección/giro).
-            self_propulsion (float): f_0, fuerza constante de autopropulsión hacia adelante.
-            linear_drag (float): gamma_lin, coeficiente de fricción lineal.
-            rotational_drag (float): gamma_rot, coeficiente de fricción rotacional.
-            d_rep (float): Radio de repulsión de corto alcance.
-            k_rep (float): Constante elástica de la fuerza de repulsión.
-            d_att (float): Radio de atracción de mediano alcance.
-            k_att (float): Constante elástica de la fuerza de atracción.
-            d_align (float): Radio de vecindario para el torque de alineación.
-            k_align (float): Fuerza del torque de alineación.
-            noise_amplitude (float): eta, intensidad del ruido angular.
-            delta_t (float): dt, incremento temporal minúsculo para la integración.
-        """
         self.N = num_particles
         self.L = box_size
         self.m = mass

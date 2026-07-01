@@ -6,21 +6,6 @@ class ContinuousSimulationSinRadio:
                  mass=1.0, inertia=1.0, self_propulsion=1.0, 
                  linear_drag=1.0, rotational_drag=1.0, 
                  k_align=5.0, noise_amplitude=0.5, delta_t=0.02):
-        """
-        Inicializa la simulación del Modelo Continuo de Materia Activa sin radio de vecindario (Acoplamiento Global).
-        
-        Args:
-            num_particles (int): N, número de partículas.
-            box_size (float): L, tamaño del lado del espacio cuadrado (límites periódicos).
-            mass (float): m, masa de la partícula (resistencia a cambiar velocidad lineal).
-            inertia (float): I, momento de inercia (resistencia a cambiar dirección/giro).
-            self_propulsion (float): f_0, fuerza constante de autopropulsión hacia adelante.
-            linear_drag (float): gamma_lin, coeficiente de fricción lineal.
-            rotational_drag (float): gamma_rot, coeficiente de fricción rotacional.
-            k_align (float): Fuerza del torque de alineación global.
-            noise_amplitude (float): eta, intensidad del ruido angular.
-            delta_t (float): dt, incremento temporal minúsculo para la integración.
-        """
         self.N = num_particles
         self.L = box_size
         self.m = mass
